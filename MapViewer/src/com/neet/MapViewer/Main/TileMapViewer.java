@@ -361,4 +361,116 @@ public class TileMapViewer implements ItemPosition {
 		updateMoveset();
 		updateCurrentCanvas();
 	}
+	
+	/**
+	 * The method is used to move cursor up.
+	 */
+	public void cursorUp() {
+		if (cursor.cursorRows > 0) {
+			replaceTileInMainCanvasToOriginal(cursor.cursorCols, cursor.cursorRows);
+			cursor.cursorRows --;
+			cursorUpdater();
+			}
+	}
+	/**
+	 * The method is used to move cursor down.
+	 */
+	public void cursorDown() {
+		if (cursor.cursorRows < numRows - 1 ) {
+			replaceTileInMainCanvasToOriginal(cursor.cursorCols, cursor.cursorRows);
+			cursor.cursorRows ++;
+			cursorUpdater();
+			}
+	}
+	/**
+	 * The method is used to move cursor left.
+	 */
+	public void cursorLeft() {
+		if (cursor.cursorCols > 0) {
+			replaceTileInMainCanvasToOriginal(cursor.cursorCols, cursor.cursorRows);
+			cursor.cursorCols --;
+			cursorUpdater();
+			}
+	}
+	/**
+	 * The method is used to move cursor right.
+	 */
+	public void cursorRight() {
+		if (cursor.cursorCols < numCols - 1 ) {
+			replaceTileInMainCanvasToOriginal(cursor.cursorCols, cursor.cursorRows);
+			cursor.cursorCols ++;
+			cursorUpdater();
+			}
+	}
+	
+	/**
+	 * The method is used to draw the already-put items each time the map is changed.
+	 */
+	private void updateItemsDraw() {
+		if (axePut) {
+			mainCanvas.getGraphicsContext2D().drawImage(
+					items,
+					AXE  * tileSize, tileSize, tileSize, tileSize,
+					axeCol * tileSize,
+					axeRow * tileSize,
+					tileSize, tileSize);
+		}
+		if (boatPut) {
+			mainCanvas.getGraphicsContext2D().drawImage(
+					items,
+					BOAT  * tileSize, tileSize, tileSize, tileSize,
+					boatCol * tileSize,
+					boatRow * tileSize,
+					tileSize, tileSize);
+		}
+	}
+	
+	/**
+	 * The method is used to handle the event that `U` is released, i.e. the user
+	 * chooses the position to put the AXE. The cursor color will back to gray. It
+	 * will return relative message to update the information shown in the information bar
+	 * under the map.  
+	 * 
+	 * handleType - Returns the type of setting result.
+	 */
+	public int handleSetAxeRequest() {
+		int handleType;
+		cursorColor = false;
+		changeCursorColor();
+
+		replaceTileInMainCanvasToOriginal(cursor.cursorCols, cursor.cursorRows);
+
+		// return type: Position invalid
+		if (tileType[cursor.cursorRows][cursor.cursorCols] == 1) {
+			handleType = 1;
+		}
+		// return type: Axe put successfully
+		else {
+			if (axePut) {
+				replaceTileInMainCanvasToOriginal(axeCol, axeRow);
+				
+				tileType[axeRow][axeCol] = 0;
+				tileType[cursor.cursorRows][cursor.cursorCols] = 1;
+				
+				handleType = 2;
+			}
+			else {
+				handleType = 0;
+			}
+			
+    		axePut = true;
+	    	tileType[cursor.cursorRows][cursor.cursorCols] = 1;
+
+	    	axeRow = cursor.cursorRows;
+	    	axeCol = cursor.cursorCols;
+		}
+
+		updateItemsDraw();
+    	drawCursorToMainCanvas();
+		
+    	mapImage = mainCanvas.snapshot(null, null);
+    	updateCurrentCanvas();
+
+    	return handleType;
+	}
 }
