@@ -14,9 +14,9 @@ Two way to start the game:
 
 ### In MapViewer:
 
-Key: `W, A, S, D` or `UP, LEFT, DOWN, RIGHT` to move, `K` to zoom in the map, `J` to zoom out the map, Press `U` to detect if AXE position valid(Green is valid, Red is invalid), release it to confirm. Press `I` to detect if BOAT position valid(Green is valid, Red is invalid), release it to confirm. `Enter` to the main game.
+Key: `W, A, S, D` or `UP, LEFT, DOWN, RIGHT` to move, `K` to zoom in the map, `J` to zoom out the map, Press `X` to detect if AXE position valid(Green is valid, Red is invalid), release it to confirm. Press `C` to detect if BOAT position valid(Green is valid, Red is invalid), release it to confirm. `Enter` to the main game.
 
-NOTICE: When you press `U` or `I` (not yet release), you will find the cursor color automatically change to red/green so that you know whether the position is available to you. During your press, you can move the cursor to find a position you would like to set the item up. Once you decided, release the key.
+NOTICE: When you press `X` or `C` (not yet release), you will find the cursor color automatically change to red/green so that you know whether the position is available to you. During your press, you can move the cursor to find a position you would like to set the item up. Once you decided, release the key.
 
 NOTICE: You can move the cursor even when the map is zoomed in. The map will update automatically following your cursor move. You can update the axe and boat position many times as you like.
 
@@ -27,3 +27,5 @@ Key: `UP, LEFT, DOWN, RIGHT` to move, `SPACE` to do the action.
 ## Developer Information
 
 Please refer to Java doc comments for more.
+=======
+
