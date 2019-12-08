@@ -23,4 +23,3 @@ NOTICE: You can move the cursor even when the map is zoomed in. The map will upd
 ### In Main Game:
 
 Key: `UP, LEFT, DOWN, RIGHT` to move, `SPACE` to do the action.
-
