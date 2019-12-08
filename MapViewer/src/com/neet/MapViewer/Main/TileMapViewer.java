@@ -473,4 +473,51 @@ public class TileMapViewer implements ItemPosition {
 
     	return handleType;
 	}
+
+	/**
+	 * The method is used to handle the event that `I` is released, i.e. the user
+	 * chooses the position to put the BOAT. The cursor color will back to gray. It
+	 * will return relative message to update the information shown in the information bar
+	 * under the map.  
+	 * 
+	 * handleType - Returns the type of setting result.
+	 */
+	public int handleSetBoatRequest() {
+		int handleType;
+		cursorColor = false;
+		changeCursorColor();
+
+		replaceTileInMainCanvasToOriginal(cursor.cursorCols, cursor.cursorRows);
+
+		// return type: Position invalid
+		if (tileType[cursor.cursorRows][cursor.cursorCols] == 1) {
+			handleType = 1;
+		}
+		// return type: Boat put successfully 
+		else {
+			if (boatPut) {
+				replaceTileInMainCanvasToOriginal(boatCol, boatRow);
+				
+				tileType[boatRow][boatCol] = 0;
+				tileType[cursor.cursorRows][cursor.cursorCols] = 1;
+				
+				handleType = 2;
+			}
+			else {
+				handleType = 0;
+			}
+
+    		boatPut = true;   
+	    	tileType[cursor.cursorRows][cursor.cursorCols] = 1;
+
+	    	boatRow = cursor.cursorRows;
+	    	boatCol = cursor.cursorCols;
+	    	
+		}
+		updateItemsDraw();
+		drawCursorToMainCanvas();
+    	mapImage = mainCanvas.snapshot(null, null);
+    	updateCurrentCanvas();
+    	return handleType;
+	}
 }
