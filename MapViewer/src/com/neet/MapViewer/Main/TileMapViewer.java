@@ -263,4 +263,102 @@ public class TileMapViewer implements ItemPosition {
 				cursor.cursorRows * tileSize,
 				tileSize, tileSize);
 	}
+	
+	/**
+	 * The method is used to update current shown canvas after each move or key pressed.
+	 */
+	private void updateCurrentCanvas() {
+		currentCanvas.getGraphicsContext2D().drawImage(
+				mapImage,
+				movesetCols * tileSize, movesetRows * tileSize,
+				currentNumCols * tileSize, currentNumRows * tileSize,
+				0, 0, 640, 640);
+	}
+
+	 /**
+	 * This method is used to set the offset when the map is zoomed in.
+	 * zoomInImage()
+	 * magnification - How much the map is zoomed in, default value is 1. 
+	 */
+	private void setOffset(int magnification) {
+		if (magnification == 1) {
+			offset = 0;
+			movesetCols = offset;
+			movesetRows = offset;
+		}
+		else if (magnification == 2){
+			offset = 10;
+			movesetCols = offset;
+			movesetRows = offset;
+		}
+		else {
+			offset = 15;
+			movesetCols = offset;
+			movesetRows = offset;
+		}
+	}
+
+	/**
+	 * The method is used to update the bounder when the user zoom in the map and cursor is moved
+	 * to the bounder of current image but still inside the whole image. The value is set equal to
+	 * offset by default.
+	 */
+	private void updateMoveset() {
+		if (movesetCols > cursor.cursorCols) {
+			movesetCols --;
+		}
+		else if (movesetRows > cursor.cursorRows) {
+			movesetRows --;
+		}
+		else if (movesetCols + currentNumCols - 1 < cursor.cursorCols) {
+			movesetCols ++;
+		}
+		else if (movesetRows + currentNumRows - 1 < cursor.cursorRows) {
+			movesetRows ++;
+		}
+
+	}
+
+	/**
+	 * After press `X` or `C`, the user is very easy to observe the cursor color changed to red/green
+	 * so that they know whether this position is available or not. This method is used to change the
+	 * cursor color after each move during the button pressed process.
+	 */
+	private void changeCursorColor() {
+		if (cursorColor == true) {
+			cursor.current = tileType[cursor.cursorRows][cursor.cursorCols];
+		}
+		else {
+			cursor.current = 2;
+		}
+	}
+	
+	/**
+	 * The method is used to change the cursor color after button pressed for puting axe or boat.
+	 */
+	public void turningOnCurorColor() {
+		cursorColor = true;
+
+		changeCursorColor();
+
+		replaceTileInMainCanvasToOriginal(cursor.cursorCols, cursor.cursorRows);
+
+		updateItemsDraw();
+		drawCursorToMainCanvas();
+		mapImage = mainCanvas.snapshot(null, null);
+		updateCurrentCanvas();
+
+	}
+
+	/**
+	 * The method is used to update the cursor's position on the map after moving it.
+	 */
+	public void cursorUpdater() {
+		changeCursorColor();
+		updateItemsDraw();
+		drawCursorToMainCanvas();
+		mapImage = mainCanvas.snapshot(null, null);
+		updateMoveset();
+		updateCurrentCanvas();
+	}
 }
