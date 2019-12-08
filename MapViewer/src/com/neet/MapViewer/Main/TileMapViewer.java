@@ -175,4 +175,92 @@ public class TileMapViewer implements ItemPosition {
 				 tileSize, tileSize);
 		mapImage = mainCanvas.snapshot(null, null);
 	}
+
+	/**
+	 * The method is used to zoom in the image, it always zoom in the image based on center position of
+	 * the whole map by setting offset. Therefore there is a circumstance that after zoomed in, the cursor 
+	 * is out of the current range. For this reason the validCursor() method is used to update cursor 
+	 * position always including in current image range, i.e. the user will always see the cursor. 
+	 */
+	public void zoomInImage() {
+		if (magnification < 4) {
+
+			magnification *= 2;
+			currentNumCols /= 2;
+			currentNumRows /= 2;
+			setOffset(magnification);
+
+			validCursor();
+			updateCurrentCanvas();
+		}
+	}
+	/**
+	 * The method is used to zoom out the image, it always zoom out the image based on centre position of
+	 * the whole map.
+	 */
+	public void zoomOutImage() {
+		if (magnification > 1) {
+
+			magnification /= 2;
+			currentNumCols *= 2;
+			currentNumRows *= 2;
+			setOffset(magnification);
+
+			validCursor();
+			updateCurrentCanvas();
+		}
+	}
+
+	/**
+	 * The method is used to update cursor position always including in current image range, i.e. the user
+	 * will always see the cursor. 
+	 */
+	private void validCursor() {
+		replaceTileInMainCanvasToOriginal(cursor.cursorCols, cursor.cursorRows);
+
+		if (cursor.cursorRows < offset) {
+			cursor.cursorRows = offset;
+		}
+		else if (cursor.cursorRows > offset + currentNumRows - 1) {
+			cursor.cursorRows = offset + currentNumRows - 1;
+		}
+
+		if (cursor.cursorCols < offset) {
+			cursor.cursorCols = offset;
+		}
+		else if (cursor.cursorCols > offset + currentNumCols - 1) {
+			cursor.cursorCols = offset + currentNumCols - 1;
+		}
+
+		updateItemsDraw();
+		drawCursorToMainCanvas();
+		mapImage = mainCanvas.snapshot(null, null);
+	}
+
+	/**
+	 * The method is used to delete the cursor image from main canvas. To achieve it, redraw the tile
+	 * from the original image.
+	 */
+	private void replaceTileInMainCanvasToOriginal(int col, int row) {
+		mainCanvas.getGraphicsContext2D().drawImage(
+				originalMapImage,
+				col * tileSize,
+				row * tileSize,
+				tileSize, tileSize,
+				col * tileSize,
+				row * tileSize,
+				tileSize, tileSize);
+	}
+
+	/**
+	 * The method is used to draw the cursor image to main canvas.
+	 */
+	private void drawCursorToMainCanvas() {
+		mainCanvas.getGraphicsContext2D().drawImage(
+				cursor.cursorColor[cursor.current], 0, 0,
+				tileSize, tileSize,
+				cursor.cursorCols * tileSize,
+				cursor.cursorRows * tileSize,
+				tileSize, tileSize);
+	}
 }
